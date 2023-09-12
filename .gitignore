@@ -1,0 +1,13 @@
+# Ignorar archivos de configuración
+.vscode/
+.idea/
+
+# Ignorar archivos de construcción y dependencias generadas
+node_modules/
+dist/
+build/
+*.log
+
+# Ignorar archivos de entorno y secretos
+#.env
+

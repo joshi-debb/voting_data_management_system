@@ -1,0 +1,23 @@
+
+const script = `
+-- CREAR BASE DE DATOS
+
+CREATE SCHEMA IF NOT EXISTS BD1PY1;
+
+--  TABLA CIUDADANO
+
+CREATE TABLE IF NOT EXISTS BD1PY1.CIUDADANO (
+  dpi VARCHAR(100) NOT NULL,
+  nombre VARCHAR(50) NOT NULL,
+  apellido VARCHAR(50) NOT NULL,
+  direccion VARCHAR(200) NOT NULL,
+  telefono VARCHAR(10) NOT NULL,
+  edad VARCHAR(2) NOT NULL,
+  genero VARCHAR(1) NOT NULL,
+  PRIMARY KEY (dpi)
+  );`;
+
+module.exports = script;
+
+
+
