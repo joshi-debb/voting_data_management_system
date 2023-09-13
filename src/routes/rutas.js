@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const { modelo } = require('../controllers/crearmodelo');
-const { borrarmodel } = require('../controllers/borrarmodelo');
-const { crearTabtemp } = require('../controllers/cargatemp');
+const { crear_modelo } = require('../controllers/crearmodelo');
+const { eliminar_modelo } = require('../controllers/eliminarmodelo');
+const { cargar_tab_temp } = require('../controllers/cargartabtemp');
 
 
-router.get('/crearmodelo',modelo)
-router.get('/borrarmodelo',borrarmodel)
-router.get('/cargatemp',crearTabtemp)
+router.get('/crearmodelo', crear_modelo)
+router.get('/eliminarmodelo', eliminar_modelo)
+router.get('/cargartabtemp', cargar_tab_temp)
 
 
 module.exports = router;

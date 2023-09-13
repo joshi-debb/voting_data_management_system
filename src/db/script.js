@@ -7,12 +7,12 @@ CREATE SCHEMA IF NOT EXISTS BD1PY1;
 --  TABLA CIUDADANO
 
 CREATE TABLE IF NOT EXISTS BD1PY1.CIUDADANO (
-  dpi VARCHAR(100) NOT NULL,
+  dpi VARCHAR(13) NOT NULL,
   nombre VARCHAR(50) NOT NULL,
   apellido VARCHAR(50) NOT NULL,
-  direccion VARCHAR(200) NOT NULL,
+  direccion VARCHAR(100) NOT NULL,
   telefono VARCHAR(10) NOT NULL,
-  edad VARCHAR(2) NOT NULL,
+  edad INT NOT NULL,
   genero VARCHAR(1) NOT NULL,
 
   PRIMARY KEY (dpi)
@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS BD1PY1.PARTIDO (
 
     PRIMARY KEY (id_partido)
 );
+
+
 
 -- Tabla CARGO
 
@@ -54,6 +56,8 @@ CREATE TABLE IF NOT EXISTS BD1PY1.CANDIDATO (
     FOREIGN KEY (id_cargo) REFERENCES CARGO(id_cargo)
     
 );
+
+
 
 -- Tabla DEPARTAMENTO
 
@@ -83,13 +87,14 @@ CREATE TABLE IF NOT EXISTS BD1PY1.MESA (
 CREATE TABLE IF NOT EXISTS BD1PY1.VOTO (
     id_votacion INT NOT NULL AUTO_INCREMENT,
     fechayhora DATE NOT NULL,
-    dpi VARCHAR(100) NOT NULL,
+    dpi VARCHAR(13) NOT NULL,
     id_mesa INT NOT NULL,
 
     PRIMARY KEY (id_votacion),
     FOREIGN KEY (dpi) REFERENCES CIUDADANO(dpi),
     FOREIGN KEY (id_mesa) REFERENCES MESA(id_mesa)
 );
+
 
 -- Tabla DETALLE_VOTO
 
@@ -103,29 +108,6 @@ CREATE TABLE IF NOT EXISTS BD1PY1.DETALLE_VOTO (
   FOREIGN KEY (id_candidato) REFERENCES CANDIDATO(id_candidato)
 
 );
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   `;
 

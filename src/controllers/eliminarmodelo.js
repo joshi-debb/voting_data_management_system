@@ -1,6 +1,6 @@
 const db = require('../db/conexion');
 
-exports.borrarmodel = async (req, res) => {
+exports.eliminar_modelo = async (req, res) => {
 
     const script = `
     -- BORRAR BASE DE DATOS

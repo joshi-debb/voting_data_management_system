@@ -1,7 +1,7 @@
 const db = require('../db/conexion');
 const script = require('../db/script');
 
-exports.modelo = async (req, res) => {
+exports.crear_modelo = async (req, res) => {
     try {
         // Eliminar los comentarios del script SQL
         const scriptWithoutComments = script.replace(/(--.*)/g, '');

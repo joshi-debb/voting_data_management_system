@@ -12,19 +12,19 @@ const filePath_Mesas = path.join(__dirname, '../data/mesas.csv');
 const filePath_Departamentos = path.join(__dirname, '../data/departamentos.csv');
 
 
-exports.crearTabtemp = async (req, res) => {
+exports.cargar_tab_temp = async (req, res) => {
 
     const scriptCrearTablasTemp = `
     
     -- Tabla temporal para Ciudadanos
 
     CREATE TEMPORARY TABLE BD1PY1.CIUDADANOTMP (
-        dpi VARCHAR(100) NOT NULL,
+        dpi VARCHAR(13) NOT NULL,
         nombre VARCHAR(50) NOT NULL,
         apellido VARCHAR(50) NOT NULL,
-        direccion VARCHAR(200) NOT NULL,
+        direccion VARCHAR(100) NOT NULL,
         telefono VARCHAR(10) NOT NULL,
-        edad VARCHAR(2) NOT NULL,
+        edad INT NOT NULL,
         genero VARCHAR(1) NOT NULL,
 
         PRIMARY KEY (dpi)
@@ -47,7 +47,7 @@ exports.crearTabtemp = async (req, res) => {
     CREATE TEMPORARY TABLE BD1PY1.PARTIDOTMP (
         id_partido INT NOT NULL AUTO_INCREMENT,
         nombre_partido VARCHAR(50) NOT NULL,
-        siglas VARCHAR(10) NOT NULL,
+        siglas VARCHAR(20) NOT NULL,
         fundacion DATE NOT NULL,
 
         PRIMARY KEY (id_partido)
@@ -62,16 +62,28 @@ exports.crearTabtemp = async (req, res) => {
         PRIMARY KEY (id_cargo)
     );
 
+
+
+
     -- Tabla temporal para Votaciones
 
-    CREATE TEMPORARY TABLE BD1PY1.VOTACIONESTMP (
+    CREATE TEMPORARY TABLE BD1PY1.VOTOTMP (
         id_votacion INT NOT NULL AUTO_INCREMENT,
-        id_candidato INT NOT NULL,
-        dpi VARCHAR(100) NOT NULL,
-        id_mesa INT NOT NULL,
         fechayhora DATE NOT NULL,
+        dpi VARCHAR(13) NOT NULL,
+        id_mesa INT NOT NULL,
 
         PRIMARY KEY (id_votacion)
+    );
+
+
+    CREATE TEMPORARY TABLE BD1PY1.DETALLE_VOTOTMP (
+        id_detalle_voto INT NOT NULL AUTO_INCREMENT,
+        id_votacion INT NOT NULL,
+        id_candidato INT NOT NULL,
+
+        PRIMARY KEY (id_detalle_voto)
+
     );
 
     -- Tabla temporal para Mesas
@@ -115,23 +127,23 @@ exports.crearTabtemp = async (req, res) => {
         // carga de datos csv a tablas temporales
         // ---------------------------------------------------------------------------------------------
 
-        // Cargar datos de ciudadanos
-        const datosClientes = fs.readFileSync(filePath_Ciudadanos, 'utf-8');
-        const lines = datosClientes.split('\n');
-        for (let i = 1; i < lines.length; i++) {
-            const fields = lines[i].split(',');
-            const dpi = fields[0];
-            const nombre = fields[1];
-            const apellido = fields[2];
-            const direccion = fields[3];
-            const telefono = fields[4];
-            const edad = fields[5];
-            const genero = fields[6];
+        // // Cargar datos de ciudadanos
+        // const datosClientes = fs.readFileSync(filePath_Ciudadanos, 'utf-8');
+        // const lines = datosClientes.split('\n');
+        // for (let i = 1; i < lines.length; i++) {
+        //     const fields = lines[i].split(',');
+        //     const dpi = fields[0];
+        //     const nombre = fields[1];
+        //     const apellido = fields[2];
+        //     const direccion = fields[3];
+        //     const telefono = fields[4];
+        //     const edad = fields[5];
+        //     const genero = fields[6];
 
-            //console.log("vamos dentro: ",dpi, nombre, apellido, direccion, telefono, edad, genero);
-            // Insertar los datos en la tabla temporal
-            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CIUDADANOTMP (dpi, nombre, apellido, direccion, telefono, edad, genero ) VALUES (?, ?, ?, ?, ?, ?, ?)`, [dpi, nombre, apellido, direccion, telefono, edad, genero]);
-        }
+        //     //console.log("vamos dentro: ",dpi, nombre, apellido, direccion, telefono, edad, genero);
+        //     // Insertar los datos en la tabla temporal
+        //     await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CIUDADANOTMP (dpi, nombre, apellido, direccion, telefono, edad, genero ) VALUES (?, ?, ?, ?, ?, ?, ?)`, [dpi, nombre, apellido, direccion, telefono, edad, genero]);
+        // }
 
         // // Cargar datos de candidatos
         // const datosCandidatos = fs.readFileSync(filePath_Candidatos, 'utf-8');
@@ -148,13 +160,13 @@ exports.crearTabtemp = async (req, res) => {
         //     const id_partido = fields[3];
         //     const id_cargo = fields[4];
 
-        //     console.log("vamos dentro: ",id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo);
+        //     //console.log("vamos dentro: ",id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo);
 
         //     //Insertar los datos en la tabla temporal
         //     await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CANDIDATOTMP (id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo ) VALUES (?, ?, ?, ?, ?)`, [id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo]);
         // }
         
-        // Cargar datos de partidos
+        // // Cargar datos de partidos
         // const datosPartidos = fs.readFileSync(filePath_Partidos, 'utf-8');
         // const lines3 = datosPartidos.split('\n');
         // for (let i = 1; i < lines3.length; i++) {
@@ -172,41 +184,41 @@ exports.crearTabtemp = async (req, res) => {
         //     await db.querywithoutclose(connection, `INSERT INTO BD1PY1.PARTIDOTMP (id_partido, nombre_partido, siglas, fundacion ) VALUES (?, ?, ?, ?)`, [id_partido, nombre_partido, siglas, fundacion]);
         // }
 
-        // Cargar datos de cargos
-        const datosCargos = fs.readFileSync(filePath_Cargos, 'utf-8');
-        const lines4 = datosCargos.split('\n');
-        for (let i = 1; i < lines4.length; i++) {
-            const fields = lines4[i].split(',');
-            const id_cargo = fields[0];
-            const cargo = fields[1];
+        // // Cargar datos de cargos
+        // const datosCargos = fs.readFileSync(filePath_Cargos, 'utf-8');
+        // const lines4 = datosCargos.split('\n');
+        // for (let i = 1; i < lines4.length; i++) {
+        //     const fields = lines4[i].split(',');
+        //     const id_cargo = fields[0];
+        //     const cargo = fields[1];
 
-            //Insertar los datos en la tabla temporal
-            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CARGOTMP (id_cargo, cargo ) VALUES (?, ?)`, [id_cargo, cargo]);
-        }
+        //     //Insertar los datos en la tabla temporal
+        //     await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CARGOTMP (id_cargo, cargo ) VALUES (?, ?)`, [id_cargo, cargo]);
+        // }
 
-        // Cargar datos de mesas
-        const datosMesas = fs.readFileSync(filePath_Mesas, 'utf-8');
-        const lines5 = datosMesas.split('\n');
-        for (let i = 1; i < lines5.length; i++) {
-            const fields = lines5[i].split(',');
-            const id_mesa = fields[0];
-            const id_departamento = fields[1];
+        // // Cargar datos de mesas
+        // const datosMesas = fs.readFileSync(filePath_Mesas, 'utf-8');
+        // const lines5 = datosMesas.split('\n');
+        // for (let i = 1; i < lines5.length; i++) {
+        //     const fields = lines5[i].split(',');
+        //     const id_mesa = fields[0];
+        //     const id_departamento = fields[1];
 
-            //Insertar los datos en la tabla temporal
-            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.MESATMP (id_mesa, id_departamento ) VALUES (?, ?)`, [id_mesa, id_departamento]);
-        }
+        //     //Insertar los datos en la tabla temporal
+        //     await db.querywithoutclose(connection, `INSERT INTO BD1PY1.MESATMP (id_mesa, id_departamento ) VALUES (?, ?)`, [id_mesa, id_departamento]);
+        // }
 
-        // Cargar datos de departamentos
-        const datosDepartamentos = fs.readFileSync(filePath_Departamentos, 'utf-8');
-        const lines6 = datosDepartamentos.split('\n');
-        for (let i = 1; i < lines6.length; i++) {
-            const fields = lines6[i].split(',');
-            const id_departamento = fields[0];
-            const nombre_departamento = fields[1];
+        // // Cargar datos de departamentos
+        // const datosDepartamentos = fs.readFileSync(filePath_Departamentos, 'utf-8');
+        // const lines6 = datosDepartamentos.split('\n');
+        // for (let i = 1; i < lines6.length; i++) {
+        //     const fields = lines6[i].split(',');
+        //     const id_departamento = fields[0];
+        //     const nombre_departamento = fields[1];
 
-            //Insertar los datos en la tabla temporal
-            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DEPARTAMENTOTMP (id_departamento, nombre_departamento ) VALUES (?, ?)`, [id_departamento, nombre_departamento]);
-        }
+        //     //Insertar los datos en la tabla temporal
+        //     await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DEPARTAMENTOTMP (id_departamento, nombre_departamento ) VALUES (?, ?)`, [id_departamento, nombre_departamento]);
+        // }
 
         // Cargar datos de votaciones
         const datosVotaciones = fs.readFileSync(filePath_Votaciones, 'utf-8');
@@ -217,12 +229,16 @@ exports.crearTabtemp = async (req, res) => {
             const id_candidato = fields[1];
             const dpi = fields[2];
             const id_mesa = fields[3];
-            const fechayhora = fields[4];
+            const fyh = fields[4];
+
+            const fechayhora = convertirFechaHora(fyh);
 
             console.log(fechayhora);
 
             //Insertar los datos en la tabla temporal
-            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.VOTACIONESTMP (id_votacion, id_candidato, dpi, id_mesa, fechayhora ) VALUES (?, ?, ?, ?, ?)`, [id_votacion, id_candidato, dpi, id_mesa, fechayhora]);
+            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.VOTOTMP (id_votacion, fechayhora, dpi, id_mesa ) VALUES (?, ?, ?, ?)`, [id_votacion, fechayhora, dpi, id_mesa]);
+            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DETALLE_VOTOTMP (id_votacion, id_candidato ) VALUES (?, ?)`, [id_votacion, id_candidato]);
+            
         }
 
         // por ultimo pasamos los datos de la tabla temporal a la tabla original
@@ -245,8 +261,11 @@ exports.crearTabtemp = async (req, res) => {
 }
 
 
+
 function convertirFecha(fecha) {
-    const partes = fecha.split('/');
+    const aux = limpiarCaracterR(fecha);
+
+    const partes = aux.split('/');
     if (partes.length === 3) {
         const dia = partes[0];
         const mes = partes[1];
@@ -254,4 +273,26 @@ function convertirFecha(fecha) {
         return `${anio}-${mes}-${dia}`;
     }
     return fecha; // Si no se puede convertir, devuelve la fecha original
+}
+
+function convertirFechaHora(fechaHoraSucia) {
+    const partes = fechaHoraSucia.split(' ');
+    if (partes.length === 2) {
+        const fechaPartes = partes[0].split('/');
+        const horaPartes = partes[1].split(':');
+        if (fechaPartes.length === 3 && horaPartes.length === 2) {
+            const anio = fechaPartes[2];
+            const mes = fechaPartes[1];
+            const dia = fechaPartes[0];
+            const hora = horaPartes[0];
+            const minutos = horaPartes[1];
+            return `${anio}-${mes}-${dia} ${hora}:${minutos}:00`;
+        }
+    }
+    return null; // Devuelve null si no se puede convertir
+}
+
+function limpiarCaracterR(cadena) {
+    // Utiliza una expresión regular para reemplazar todos los caracteres "\r" con una cadena vacía.
+    return cadena.replace(/\r/g, '');
 }
