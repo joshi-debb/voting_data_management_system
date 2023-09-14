@@ -66,7 +66,7 @@ exports.cargar_tab_temp = async (req, res) => {
 
     CREATE TEMPORARY TABLE BD1PY1.VOTOTMP (
         id_votacion INT NOT NULL AUTO_INCREMENT,
-        fechayhora DATE NOT NULL,
+        fechayhora DATETIME NOT NULL,
         dpi VARCHAR(13) NOT NULL,
         id_mesa INT NOT NULL,
 
@@ -141,27 +141,7 @@ exports.cargar_tab_temp = async (req, res) => {
             await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CIUDADANOTMP (dpi, nombre, apellido, direccion, telefono, edad, genero ) VALUES (?, ?, ?, ?, ?, ?, ?)`, [dpi, nombre, apellido, direccion, telefono, edad, genero]);
         }
 
-        // Cargar datos de candidatos
-        const datosCandidatos = fs.readFileSync(filePath_Candidatos, 'utf-8');
-        const lines2 = datosCandidatos.split('\n');
-        for (let i = 1; i < lines2.length; i++) {
-            const fields = lines2[i].split(',');
-            const id_candidato = fields[0];
-            const nombres_candidato = fields[1];
-            const fecha_nac = fields[2];
-
-            //Convertir la fecha de nacimiento
-            const fecha_nacimiento = convertirFecha(fecha_nac);
-
-            const id_partido = fields[3];
-            const id_cargo = fields[4];
-
-            //console.log("vamos dentro: ",id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo);
-
-            //Insertar los datos en la tabla temporal
-            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CANDIDATOTMP (id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo ) VALUES (?, ?, ?, ?, ?)`, [id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo]);
-        }
-        
+    
         // Cargar datos de partidos
         const datosPartidos = fs.readFileSync(filePath_Partidos, 'utf-8');
         const lines3 = datosPartidos.split('\n');
@@ -192,6 +172,26 @@ exports.cargar_tab_temp = async (req, res) => {
             await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CARGOTMP (id_cargo, cargo ) VALUES (?, ?)`, [id_cargo, cargo]);
         }
 
+        // Cargar datos de candidatos
+        const datosCandidatos = fs.readFileSync(filePath_Candidatos, 'utf-8');
+        const lines2 = datosCandidatos.split('\n');
+        for (let i = 1; i < lines2.length; i++) {
+            const fields = lines2[i].split(',');
+            const id_candidato = fields[0];
+            const nombres_candidato = fields[1];
+            const fecha_nac = fields[2];
+
+            //Convertir la fecha de nacimiento
+            const fecha_nacimiento = convertirFecha(fecha_nac);
+
+            const id_partido = fields[3];
+            const id_cargo = fields[4];
+
+            //Insertar los datos en la tabla temporal
+            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CANDIDATOTMP (id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo ) VALUES (?, ?, ?, ?, ?)`, [id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo]);
+        }
+            
+
         // Cargar datos de mesas
         const datosMesas = fs.readFileSync(filePath_Mesas, 'utf-8');
         const lines5 = datosMesas.split('\n');
@@ -216,26 +216,33 @@ exports.cargar_tab_temp = async (req, res) => {
             await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DEPARTAMENTOTMP (id_departamento, nombre_departamento ) VALUES (?, ?)`, [id_departamento, nombre_departamento]);
         }
 
-        // // Cargar datos de votaciones
-        // const datosVotaciones = fs.readFileSync(filePath_Votaciones, 'utf-8');
-        // const lines7 = datosVotaciones.split('\n');
-        // for (let i = 1; i < lines7.length; i++) {
-        //     const fields = lines7[i].split(',');
-        //     const id_votacion = fields[0];
-        //     const id_candidato = fields[1];
-        //     const dpi = fields[2];
-        //     const id_mesa = fields[3];
-        //     const fyh = fields[4];
+        // Cargar datos de votaciones
+        const datosVotaciones = fs.readFileSync(filePath_Votaciones, 'utf-8');
+        const lines7 = datosVotaciones.split('\n');
 
-        //     const fechayhora = convertirFechaHora(fyh);
+        const existingDPIs = new Set(); // Utiliza un Set para mantener un registro de los DPIs existentes
 
-        //     console.log(fechayhora);
+        for (let i = 1; i < lines7.length; i++) {
+            const fields = lines7[i].split(',');
+            const id_votacion = fields[0];
+            const id_candidato = fields[1];
+            const dpi = fields[2];
+            const id_mesa = fields[3];
+            const fyh = fields[4];
 
-        //     //Insertar los datos en la tabla temporal
-        //     await db.querywithoutclose(connection, `INSERT INTO BD1PY1.VOTOTMP (fechayhora, dpi, id_mesa ) VALUES (?, ?, ?)`, [fechayhora, dpi, id_mesa]);
-        //     //await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DETALLE_VOTOTMP (id_votacion, id_candidato ) VALUES (?, ?)`, [id_votacion, id_candidato]);
+            const fechayhora = convertirFechaHora(fyh);
+
+            // Verificar si el DPI ya existe en la tabla temporal
+            if (!existingDPIs.has(dpi)) {
+                // Insertar los datos en la tabla temporal
+                await db.querywithoutclose(connection, `INSERT INTO BD1PY1.VOTOTMP (fechayhora, dpi, id_mesa ) VALUES (?, ?, ?)`, [fechayhora, dpi, id_mesa]);
+                existingDPIs.add(dpi); // Agregar el DPI al Set para evitar duplicados
+            }
+
+            //Insertar los datos en la tabla temporal
+            await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DETALLE_VOTOTMP (id_votacion, id_candidato ) VALUES (?, ?)`, [id_votacion, id_candidato]);
             
-        // }
+        }
 
         // por ultimo pasamos los datos de la tabla temporal a la tabla original
         //------------------------------------------------------------------------------------------
@@ -243,24 +250,24 @@ exports.cargar_tab_temp = async (req, res) => {
         await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CIUDADANO (dpi, nombre, apellido, direccion, telefono, edad, genero) SELECT dpi, nombre, apellido, direccion, telefono, edad, genero FROM BD1PY1.CIUDADANOTMP`, []);
         await db.querywithoutclose(connection, `INSERT INTO BD1PY1.PARTIDO (id_partido, nombre_partido, siglas, fundacion) SELECT id_partido, nombre_partido, siglas, fundacion FROM BD1PY1.PARTIDOTMP`, []);
         await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CARGO (id_cargo, cargo) SELECT id_cargo, cargo FROM BD1PY1.CARGOTMP`, []);
-        // await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CANDIDATO (id_candidato, nombres, fecha_nac, id_partido, id_cargo) SELECT id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo FROM BD1PY1.CANDIDATOTMP`, []);
+        await db.querywithoutclose(connection, `INSERT INTO BD1PY1.CANDIDATO (id_candidato, nombres, fecha_nac, id_partido, id_cargo) SELECT id_candidato, nombres_candidato, fecha_nacimiento, id_partido, id_cargo FROM BD1PY1.CANDIDATOTMP`, []);
         await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DEPARTAMENTO (id_departamento, nombre_departamento) SELECT id_departamento, nombre_departamento FROM BD1PY1.DEPARTAMENTOTMP`, []);
         await db.querywithoutclose(connection, `INSERT INTO BD1PY1.MESA (id_mesa, id_departamento) SELECT id_mesa, id_departamento FROM BD1PY1.MESATMP`, []);
 
-        // await db.querywithoutclose(connection, `INSERT INTO BD1P                                                                                       Y1.VOTO (fechayhora, dpi, id_mesa) SELECT fechayhora, dpi, id_mesa FROM BD1PY1.VOTOTMP`, []);        
-        // await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DETALLE_VOTO (id_votacion, id_candidato) SELECT id_votacion, id_candidato FROM BD1PY1.DETALLE_VOTOTMP`, []);
+        await db.querywithoutclose(connection, `INSERT INTO BD1PY1.VOTO (fechayhora, dpi, id_mesa) SELECT fechayhora, dpi, id_mesa FROM BD1PY1.VOTOTMP`, []);        
+        await db.querywithoutclose(connection, `INSERT INTO BD1PY1.DETALLE_VOTO (id_votacion, id_candidato) SELECT id_votacion, id_candidato FROM BD1PY1.DETALLE_VOTOTMP`, []);
 
 
         // Cierra la conexión
         await connection.end();
 
         res.status(200).json({
-            body: { res: true, message: 'Carga masiva de datos a tabla temporal exitosa!' },
+            body: { res: true, message: 'Carga masiva de datos a tabla temporal, Cargar datos a modelo: BD1PY1 & Eliminar datos de tabla temporal Realizados con exito!' },
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            body: { res: false, message: 'Ocurrio un problema con la carga masiva :[', error },
+            body: { res: false, message: 'Error en carga masiva: ', error },
         });
     }
 }

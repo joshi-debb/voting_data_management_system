@@ -23,12 +23,12 @@ exports.eliminar_modelo = async (req, res) => {
         }
 
         res.status(200).json({
-            body: { res: true, message: 'MODELO BORRADO EXITOSAMENTE' },
+            body: { res: true, message: 'Modelo Eliminado: BD1PY1' },
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            body: { res: false, message: 'OCURRIÓ UN PROBLEMA AL CREAR EL MODELO', error },
+            body: { res: false, message: 'Error al Eliminar: BD1PY1', error },
         });
     }
 }

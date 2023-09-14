@@ -18,12 +18,12 @@ exports.crear_modelo = async (req, res) => {
         }
 
         res.status(200).json({
-            body: { res: true, message: 'MODELO CREADO EXITOSAMENTE' },
+            body: { res: true, message: 'Modelo Creado: BD1PY1' },
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            body: { res: false, message: 'OCURRIÓ UN PROBLEMA AL CREAR EL MODELO', error },
+            body: { res: false, message: 'Error al Crear Modelo: BD1PY1', error },
         });
     }
 }
