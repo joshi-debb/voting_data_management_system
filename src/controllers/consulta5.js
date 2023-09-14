@@ -3,27 +3,23 @@ const config = require('../db/config')
 const mysql = require('mysql2/promise')
 
 
-exports.consulta_1 = async (req, res) => {
+exports.consulta_5 = async (req, res) => {
 
     const scriptConsulta = `
 
-    -- NOMBRE DE LOS CANDIDATOS A ALCALDE POR PARTIDO
+    -- CANTIDAD DE VOTACIONES POR DEPARTAMENTO
 
     SELECT 
-        CASE
-            WHEN bd1py1.candidato.id_cargo = 1 THEN bd1py1.candidato.nombres
-        END AS PRESIDENTE,
-        CASE
-            WHEN bd1py1.candidato.id_cargo = 2 THEN bd1py1.candidato.nombres
-        END AS VICEPRESIDENTE,
-        bd1py1.partido.siglas AS PARTIDO
+        D.nombre_departamento AS 'DEPARTAMENTO',
+        COUNT(*) AS 'VOTOS'
     FROM
-        bd1py1.candidato
+        BD1PY1.VOTO V
             INNER JOIN
-        bd1py1.partido ON bd1py1.candidato.id_partido = bd1py1.partido.id_partido
-    WHERE
-        bd1py1.candidato.id_cargo = 1
-            OR bd1py1.candidato.id_cargo = 2;
+        BD1PY1.MESA M ON V.id_mesa = M.id_mesa
+            INNER JOIN
+        BD1PY1.DEPARTAMENTO D ON M.id_departamento = D.id_departamento
+    GROUP BY D.nombre_departamento;
+
     
     `;
 
@@ -60,7 +56,7 @@ exports.consulta_1 = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            body: { res: false, message: 'Error en consulta 1: ', error },
+            body: { res: false, message: 'Error en consulta 5: ', error },
         });
     }
 }
