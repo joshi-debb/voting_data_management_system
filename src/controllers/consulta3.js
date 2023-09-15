@@ -10,8 +10,8 @@ exports.consulta_3 = async (req, res) => {
     -- NOMBRE DE LOS CANDIDATOS A ALCALDE POR PARTIDO
 
     SELECT 
-        bd1py1.candidato.nombres AS ALCALDE,
-        bd1py1.partido.siglas AS PARTIDO
+        bd1py1.candidato.nombres AS Alcalde,
+        bd1py1.partido.siglas AS Partido
     FROM
         bd1py1.candidato
             INNER JOIN

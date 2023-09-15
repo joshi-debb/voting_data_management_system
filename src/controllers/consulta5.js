@@ -10,15 +10,15 @@ exports.consulta_5 = async (req, res) => {
     -- CANTIDAD DE VOTACIONES POR DEPARTAMENTO
 
     SELECT 
-        D.nombre_departamento AS 'DEPARTAMENTO',
-        COUNT(*) AS 'VOTOS'
+        DEP.nombre_departamento AS 'Departamento',
+        COUNT(*) AS 'Votos'
     FROM
-        BD1PY1.VOTO V
+        BD1PY1.VOTO VOT
             INNER JOIN
-        BD1PY1.MESA M ON V.id_mesa = M.id_mesa
+        BD1PY1.MESA M ON VOT.id_mesa = M.id_mesa
             INNER JOIN
-        BD1PY1.DEPARTAMENTO D ON M.id_departamento = D.id_departamento
-    GROUP BY D.nombre_departamento;
+        BD1PY1.DEPARTAMENTO DEP ON M.id_departamento = DEP.id_departamento
+    GROUP BY DEP.nombre_departamento;
 
     
     `;

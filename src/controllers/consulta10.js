@@ -3,28 +3,14 @@ const config = require('../db/config')
 const mysql = require('mysql2/promise')
 
 
-exports.consulta_1 = async (req, res) => {
+exports.consulta_10 = async (req, res) => {
 
     const scriptConsulta = `
 
-    -- NOMBRE DE LOS CANDIDATOS A PRESIDENTE Y VICEPRESIDENTE POR PARTIDO
+    -- TOP 5 HORA MAS CONCURRIDA PARA VOTAR
 
-    SELECT 
-        PRES.nombres AS Presidente,
-        VICE.nombres AS Vicepresidente,
-        PART.siglas AS Partido
-    FROM
-        bd1py1.candidato PRES
-            INNER JOIN
-        bd1py1.candidato VICE ON PRES.id_partido = VICE.id_partido
-            AND PRES.id_cargo = 1
-            AND VICE.id_cargo = 2
-            INNER JOIN
-        bd1py1.partido PART ON PRES.id_partido = PART.id_partido;
-    
     `;
 
-     
     try {
         // Crear una conexión que se cerrará automáticamente al terminar
         const connection = await mysql.createConnection(config.db);
@@ -57,7 +43,7 @@ exports.consulta_1 = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            body: { res: false, message: 'Error en consulta 1: ', error },
+            body: { res: false, message: 'Error en consulta 10: ', error },
         });
     }
 }

@@ -10,7 +10,7 @@ exports.consulta_6 = async (req, res) => {
     -- CANTIDAD DE VOTOS NULOS
 
     SELECT 
-        COUNT(*) AS 'VOTOS NULOS'
+        COUNT(*) AS 'Votos Nulos'
     FROM
         BD1PY1.DETALLE_VOTO
     WHERE

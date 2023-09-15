@@ -10,8 +10,8 @@ exports.consulta_4 = async (req, res) => {
     -- CANTIDAD DE CANDIDATOS POR PARTIDO (PRESIDENTES, VICEPRESIDENTES, DIPUTADOS, ALCALDES)
 
     SELECT
-        bd1py1.partido.siglas AS PARTIDO,
-        COUNT(bd1py1.candidato.id_partido) AS CANTIDAD
+        bd1py1.partido.siglas AS Partido,
+        COUNT(bd1py1.candidato.id_partido) AS Candidatos
     FROM
         bd1py1.candidato
             INNER JOIN

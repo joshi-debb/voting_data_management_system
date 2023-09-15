@@ -12,9 +12,9 @@ exports.consulta_11 = async (req, res) => {
     SELECT 
         genero, COUNT(*) AS cantidad_de_votos
     FROM
-        CIUDADANO C
+        bd1py1.ciudadano C
             JOIN
-        VOTO V ON C.dpi = V.dpi
+        bd1py1.voto V ON C.dpi = V.dpi
     GROUP BY genero;
 
     `;

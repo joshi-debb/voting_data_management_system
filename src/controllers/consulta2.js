@@ -10,8 +10,8 @@ exports.consulta_2 = async (req, res) => {
     -- NUMERO DE CANDIDATOS A DIPUTADOS (LISTA NACIONAL, DISTRITO ELECTORAL, PARLAMENTO CENTROAMERICANO).
 
     SELECT
-        bd1py1.partido.siglas AS PARTIDO,
-        COUNT(bd1py1.candidato.id_partido) AS CANTIDAD
+        bd1py1.partido.nombre_partido AS Partido,
+        COUNT(bd1py1.candidato.id_partido) AS Cantidad
     FROM
         bd1py1.candidato
             INNER JOIN
@@ -20,7 +20,7 @@ exports.consulta_2 = async (req, res) => {
         bd1py1.candidato.id_cargo = 3
             OR bd1py1.candidato.id_cargo = 4
             OR bd1py1.candidato.id_cargo = 5
-    GROUP BY bd1py1.partido.siglas;
+    GROUP BY bd1py1.partido.nombre_partido;
 
     
     `;

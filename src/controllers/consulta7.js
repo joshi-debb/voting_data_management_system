@@ -3,25 +3,22 @@ const config = require('../db/config')
 const mysql = require('mysql2/promise')
 
 
-exports.consulta_1 = async (req, res) => {
+exports.consulta_7 = async (req, res) => {
 
     const scriptConsulta = `
 
-    -- NOMBRE DE LOS CANDIDATOS A PRESIDENTE Y VICEPRESIDENTE POR PARTIDO
-
-    SELECT 
-        PRES.nombres AS Presidente,
-        VICE.nombres AS Vicepresidente,
-        PART.siglas AS Partido
-    FROM
-        bd1py1.candidato PRES
-            INNER JOIN
-        bd1py1.candidato VICE ON PRES.id_partido = VICE.id_partido
-            AND PRES.id_cargo = 1
-            AND VICE.id_cargo = 2
-            INNER JOIN
-        bd1py1.partido PART ON PRES.id_partido = PART.id_partido;
+    -- TOP 10 DE EDAD DE CIUDADANOS QUE REALIZARON SU VOTO
     
+    SELECT 
+        Persona.edad AS Edad, COUNT(Votacion.dpi) AS Votos
+    FROM
+        bd1py1.ciudadano Persona
+            INNER JOIN
+        bd1py1.voto Votacion ON Persona.dpi = Votacion.dpi
+    GROUP BY Persona.edad
+    ORDER BY COUNT(Votacion.dpi) DESC
+    LIMIT 10;
+
     `;
 
      
@@ -57,7 +54,7 @@ exports.consulta_1 = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            body: { res: false, message: 'Error en consulta 1: ', error },
+            body: { res: false, message: 'Error en consulta 7: ', error },
         });
     }
 }
