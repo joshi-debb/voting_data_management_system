@@ -9,8 +9,24 @@ exports.consulta_8 = async (req, res) => {
 
     -- TOP 10 DE CANDIDATOS MAS VOTADOS PARA PRESIDENTE Y VICEPRESIDENTE
 
-
-
+    SELECT 
+        GROUP_CONCAT(DISTINCT CAND.nombres) AS Presidente,
+        GROUP_CONCAT(DISTINCT VICE.nombres) AS Vicepresidente,
+        COUNT(DETVOT.id_votacion) AS Votos
+    FROM
+        bd1py1.detalle_voto DETVOT
+            INNER JOIN
+        bd1py1.candidato CAND ON DETVOT.id_candidato = CAND.id_candidato
+            INNER JOIN
+        bd1py1.candidato VICE ON CAND.id_partido = VICE.id_partido
+            AND CAND.id_cargo = 1
+            AND VICE.id_cargo = 2
+            INNER JOIN
+        bd1py1.partido PT ON CAND.id_partido = PT.id_partido
+    GROUP BY PT.siglas
+    ORDER BY COUNT(DETVOT.id_votacion) DESC
+    LIMIT 10;
+    
     `;
 
      
