@@ -10,13 +10,15 @@ exports.consulta_4 = async (req, res) => {
     -- CANTIDAD DE CANDIDATOS POR PARTIDO (PRESIDENTES, VICEPRESIDENTES, DIPUTADOS, ALCALDES)
 
     SELECT
-        bd1py1.partido.siglas AS Partido,
-        COUNT(bd1py1.candidato.id_partido) AS Candidatos
+        bd1py1.partido.nombre_partido AS Partido,
+        COUNT(bd1py1.candidato.id_partido) AS Cantidad
     FROM
         bd1py1.candidato
             INNER JOIN
         bd1py1.partido ON bd1py1.candidato.id_partido = bd1py1.partido.id_partido
-    GROUP BY bd1py1.partido.siglas;
+    WHERE
+        bd1py1.candidato.id_partido != -1
+    GROUP BY bd1py1.partido.nombre_partido;
     
     `;
 
@@ -46,8 +48,9 @@ exports.consulta_4 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '4',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {

@@ -9,8 +9,8 @@ exports.consulta_6 = async (req, res) => {
 
     -- CANTIDAD DE VOTOS NULOS
 
-    SELECT 
-        COUNT(*) AS 'Votos Nulos'
+    SELECT
+        CAST(COUNT(*) / 5 AS SIGNED) AS 'Votos Nulos'
     FROM
         BD1PY1.DETALLE_VOTO
     WHERE
@@ -44,8 +44,9 @@ exports.consulta_6 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '6',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {

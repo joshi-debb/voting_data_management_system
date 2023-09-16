@@ -11,7 +11,7 @@ exports.consulta_5 = async (req, res) => {
 
     SELECT 
         DEP.nombre_departamento AS 'Departamento',
-        COUNT(*) AS 'Votos'
+        COUNT(*) AS 'No Votos'
     FROM
         BD1PY1.VOTO VOT
             INNER JOIN
@@ -49,8 +49,9 @@ exports.consulta_5 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '5',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {

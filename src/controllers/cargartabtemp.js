@@ -16,7 +16,9 @@ exports.cargar_tab_temp = async (req, res) => {
 
     const scriptCrearTablasTemp = `
     
-    -- Tabla temporal para Ciudadanos
+    -- CREAR TABLAS TEMPORALES
+
+    -- CREAR TABLA TEMPORAL PARA CIUDADANOS
 
     CREATE TEMPORARY TABLE BD1PY1.CIUDADANOTMP (
         dpi VARCHAR(13) NOT NULL,
@@ -30,7 +32,7 @@ exports.cargar_tab_temp = async (req, res) => {
         PRIMARY KEY (dpi)
     );
     
-    -- Tabla temporal para Candidatos
+    -- CREAR TABLA TEMPORAL PARA CANDIDATOS
         
     CREATE TEMPORARY TABLE BD1PY1.CANDIDATOTMP (
         id_candidato INT NOT NULL AUTO_INCREMENT,
@@ -42,7 +44,7 @@ exports.cargar_tab_temp = async (req, res) => {
         PRIMARY KEY (id_candidato)
     );
 
-    -- Tabla temporal para Partidos
+    -- CREAR TABLA TEMPORAL PARA PARTIDOS
 
     CREATE TEMPORARY TABLE BD1PY1.PARTIDOTMP (
         id_partido INT NOT NULL AUTO_INCREMENT,
@@ -53,7 +55,7 @@ exports.cargar_tab_temp = async (req, res) => {
         PRIMARY KEY (id_partido)
     );
 
-    -- Tabla temporal para Cargos
+    -- CREAR TABLA TEMPORAL PARA CARGOS
 
     CREATE TEMPORARY TABLE BD1PY1.CARGOTMP (
         id_cargo INT NOT NULL AUTO_INCREMENT,
@@ -62,7 +64,7 @@ exports.cargar_tab_temp = async (req, res) => {
         PRIMARY KEY (id_cargo)
     );
 
-    -- Tabla temporal para Votaciones
+    -- CREAR TABLA TEMPORAL PARA VOTACIONES
 
     CREATE TEMPORARY TABLE BD1PY1.VOTOTMP (
         id_votacion INT NOT NULL AUTO_INCREMENT,
@@ -72,7 +74,8 @@ exports.cargar_tab_temp = async (req, res) => {
 
         PRIMARY KEY (id_votacion)
     );
-
+    
+    -- CREAR TABLA TEMPORAL PARA DETALLE DE VOTACIONES
 
     CREATE TEMPORARY TABLE BD1PY1.DETALLE_VOTOTMP (
         id_detalle_voto INT NOT NULL AUTO_INCREMENT,
@@ -83,7 +86,7 @@ exports.cargar_tab_temp = async (req, res) => {
 
     );
 
-    -- Tabla temporal para Mesas
+    -- CREAR TABLA TEMPORAL PARA MESAS
 
     CREATE TEMPORARY TABLE BD1PY1.MESATMP (
         id_mesa INT NOT NULL AUTO_INCREMENT,
@@ -92,7 +95,7 @@ exports.cargar_tab_temp = async (req, res) => {
         PRIMARY KEY (id_mesa)
     );
 
-    -- Tabla temporal para Departamentos
+    -- CREAR TABLA TEMPORAL PARA DEPARTAMENTOS
 
     CREATE TEMPORARY TABLE BD1PY1.DEPARTAMENTOTMP (
         id_departamento INT NOT NULL AUTO_INCREMENT,

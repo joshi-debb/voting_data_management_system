@@ -10,7 +10,7 @@ exports.consulta_7 = async (req, res) => {
     -- TOP 10 DE EDAD DE CIUDADANOS QUE REALIZARON SU VOTO
     
     SELECT 
-        Persona.edad AS Edad, COUNT(Votacion.dpi) AS Votos
+        COUNT(Votacion.dpi) AS Cantidad, Persona.edad AS Edad
     FROM
         bd1py1.ciudadano Persona
             INNER JOIN
@@ -47,8 +47,9 @@ exports.consulta_7 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '7',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {

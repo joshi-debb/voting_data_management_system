@@ -10,7 +10,7 @@ exports.consulta_11 = async (req, res) => {
     -- CANTIDAD DE VOTOS POR GENERO (M|F)
 
     SELECT 
-        genero, COUNT(*) AS cantidad_de_votos
+        Genero, COUNT(*) AS  'Cantidad Votos'
     FROM
         bd1py1.ciudadano C
             JOIN
@@ -45,8 +45,9 @@ exports.consulta_11 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '11',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {

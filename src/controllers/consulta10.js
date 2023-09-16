@@ -9,6 +9,14 @@ exports.consulta_10 = async (req, res) => {
 
     -- TOP 5 HORA MAS CONCURRIDA PARA VOTAR
 
+    SELECT 
+        HOUR(VOTACION.fechayhora) AS Hora, COUNT(VOTACION.id_votacion) AS 'Cantidad Votos'
+    FROM
+        bd1py1.voto VOTACION
+    GROUP BY HOUR(VOTACION.fechayhora)
+    ORDER BY COUNT(VOTACION.id_votacion) DESC
+    LIMIT 5;
+
     `;
 
     try {
@@ -36,8 +44,9 @@ exports.consulta_10 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '10',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {

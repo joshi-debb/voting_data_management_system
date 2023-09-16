@@ -10,8 +10,8 @@ exports.consulta_3 = async (req, res) => {
     -- NOMBRE DE LOS CANDIDATOS A ALCALDE POR PARTIDO
 
     SELECT 
-        bd1py1.candidato.nombres AS Alcalde,
-        bd1py1.partido.siglas AS Partido
+        bd1py1.candidato.nombres AS Nombre,
+        bd1py1.partido.nombre_partido AS Partido
     FROM
         bd1py1.candidato
             INNER JOIN
@@ -47,8 +47,9 @@ exports.consulta_3 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '3',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {

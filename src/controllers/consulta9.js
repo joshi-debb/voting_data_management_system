@@ -9,6 +9,19 @@ exports.consulta_9 = async (req, res) => {
 
     -- TOP 5 DE MESAS MAS FRECUENTADAS
 
+    SELECT 
+        VOTACION.id_mesa AS 'No Mesa',
+        DEP.nombre_departamento AS Departamento,
+        COUNT(VOTACION.id_votacion) AS 'Cantidad Votos'
+    FROM
+        bd1py1.voto VOTACION
+            INNER JOIN
+        bd1py1.mesa MESA ON VOTACION.id_mesa = MESA.id_mesa
+            INNER JOIN
+        bd1py1.departamento DEP ON MESA.id_departamento = DEP.id_departamento
+    GROUP BY VOTACION.id_mesa
+    ORDER BY COUNT(VOTACION.id_votacion) DESC
+    LIMIT 5;
 
 
     `;
@@ -39,8 +52,9 @@ exports.consulta_9 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '9',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {

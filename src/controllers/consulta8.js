@@ -12,7 +12,7 @@ exports.consulta_8 = async (req, res) => {
     SELECT 
         GROUP_CONCAT(DISTINCT CAND.nombres) AS Presidente,
         GROUP_CONCAT(DISTINCT VICE.nombres) AS Vicepresidente,
-        COUNT(DETVOT.id_votacion) AS Votos
+        COUNT(DETVOT.id_votacion) AS 'Votos Totales'
     FROM
         bd1py1.detalle_voto DETVOT
             INNER JOIN
@@ -22,8 +22,8 @@ exports.consulta_8 = async (req, res) => {
             AND CAND.id_cargo = 1
             AND VICE.id_cargo = 2
             INNER JOIN
-        bd1py1.partido PT ON CAND.id_partido = PT.id_partido
-    GROUP BY PT.siglas
+        bd1py1.partido PART ON CAND.id_partido = PART.id_partido
+    GROUP BY PART.siglas
     ORDER BY COUNT(DETVOT.id_votacion) DESC
     LIMIT 10;
     
@@ -55,8 +55,9 @@ exports.consulta_8 = async (req, res) => {
         await connection.end();
 
         res.status(200).json({
-            res: true,
-            data: rows, // Los resultados de la consulta
+            consulta: '8',
+            rows: rows.length,
+            return: rows, // Los resultados de la consulta
         });
 
     } catch (error) {
